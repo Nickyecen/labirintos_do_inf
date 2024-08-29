@@ -12,10 +12,10 @@ char Game::run() {
     DisableCursor();
 
     Player player;
-    Mesh cube = GenMeshCube(TILE_SIZE, TILE_SIZE, TILE_SIZE);
-    Model floorModel = LoadModelFromMesh(cube);
 
     float rot = 0.0f;
+
+    Map map("../maps/1.map");
 
     while(!shouldQuit && !WindowShouldClose()) {
         rot += 0.1f;
@@ -23,11 +23,9 @@ char Game::run() {
         player.update();
 
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(BLACK);
             BeginMode3D(*player.getCamera());
- 
-                DrawModelEx(floorModel, {3, 0, 0}, {0, 1, 0}, rot, {1,1,1}, RED); 
-
+                map.draw(); 
             EndMode3D();
         EndDrawing();
 

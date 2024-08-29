@@ -1,7 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#define TILE_SIZE 2
+#include "map.hpp"
 
 class Game {
     public:

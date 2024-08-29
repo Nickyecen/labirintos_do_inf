@@ -43,5 +43,6 @@ O intuito desse remake é refazer o código agora com as novas experiências que
 - [ ] Sistema de bombas
 ### Mapa
 - [x] Mapa de caracteres
-- [ ] Mapa de Tiles
+- [x] Mapa de Tiles
 - [ ] Sistema de desenho de tiles otimizado
+- [ ] Shader para texturas da parede e chão

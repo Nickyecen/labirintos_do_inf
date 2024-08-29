@@ -3,7 +3,7 @@
 #include <raymath.h>
 
 Player::Player() {
-    this->position = {0, 0, 0};
+    this->position = {0, 1.6, 0};
 
     this->camera = new Camera3D;
 
