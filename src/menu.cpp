@@ -1,4 +1,5 @@
 #include "include/menu.hpp"
+#include "include/map.hpp"
 #include <raylib.h>
 
 #define RAYGUI_IMPLEMENTATION

@@ -2,3 +2,46 @@
 Remake do jogo Labirintos do INF criado em 2023 como trabalho final da cadeira de Algoritmos e Programação. O jogo havia sido feito em C utilizando apenas a raylib e está sendo refeito em C++ utilizando a raylib e a raygui.
 O intuito desse remake é refazer o código agora com as novas experiências que tive estando mais avançado no curso, mantendo a base do jogo original, mas buscando implementar um código mais limpo e de melhor desempenho e adicionando pequenas features novas para melhorar a experiência de jogo.
 
+## To-do
+### Menus
+- [ ] Funcionalidade dos botões do menu principal
+- [ ] Menu de opções
+- [ ] Menu de tutorial
+- [ ] Música de fundo no menu
+- [ ] Imagem de fundo no menu
+- [ ] Caixa de confirmação para decisões destruidoras
+### Saves
+- [ ] Sistema de jogo
+- [ ] Sistema de salvamento de jogo
+- [ ] Sistema de carregamento de jogo
+### Mecânicas
+- [ ] Elevador leva para o próximo nível
+- [ ] Shader de fog
+- [ ] Menu de pausa
+- [ ] GUI
+#### Itens
+- [ ] Sistema shufflebag para créditos
+- [ ] Distribuição aleatória de itens pelo mapa
+- [ ] Item de vida
+- [ ] Item de bomba
+- [ ] Item de créditos 
+- [ ] Item de saúde
+- [ ] Animação para o item girando
+#### Estátuas
+- [ ] Pelo menos três estátuas aleatórias
+- [ ] Sistema de estátua de vidas anteriores
+- [ ] Sistema de perguntas e recompensas
+#### Professores
+- [ ] Sistema de visão
+- [ ] Sistema de cantos e movimentação
+- [ ] Sistema de perguntas e dano
+- [ ] Sistema de música quando vê jogador
+#### Player
+- [ ] Sistema de colisão
+- [ ] Sistema de movimentação
+- [ ] Sistema de corrida e estamina
+- [ ] Sistema de bombas
+### Mapa
+- [x] Mapa de caracteres
+- [ ] Mapa de Tiles
+- [ ] Sistema de desenho de tiles otimizado
