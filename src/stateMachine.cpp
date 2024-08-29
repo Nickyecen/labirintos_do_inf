@@ -11,6 +11,9 @@ void StateMachine::run() {
             case STATE_MENU:
                 state = Menu::run();
                 break;
+            case STATE_GAME:
+                state = Game::run();
+                break;
             case STATE_QUIT:
                 break; 
         } 

@@ -1,5 +1,4 @@
 #include "include/menu.hpp"
-#include "include/map.hpp"
 #include <raylib.h>
 
 #define RAYGUI_IMPLEMENTATION
@@ -9,6 +8,9 @@ char Menu::run() {
    
     char nextState = 'q';
     bool shouldQuit = false;
+
+    SetExitKey(0);
+    EnableCursor();
 
     while(!shouldQuit && !WindowShouldClose()) {
         BeginDrawing();
@@ -30,6 +32,8 @@ char Menu::run() {
             float buttonHeight = 60.0f;
             float spacing = 10.0f;
             if(GuiButton((Rectangle){(GetScreenWidth()-buttonWidth)/2.0f, GetScreenHeight()/2.0f, buttonWidth, buttonHeight}, "Novo Jogo")) {
+                nextState = 'g';
+                shouldQuit = true;
             }
             if(GuiButton((Rectangle){(GetScreenWidth()-buttonWidth)/2.0f, GetScreenHeight()/2.0f + buttonHeight + spacing, buttonWidth, buttonHeight}, "Carregar Jogo")) {
             }
