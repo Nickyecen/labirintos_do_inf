@@ -45,12 +45,30 @@ void Map::print() const {
     }
 }
 
-void Map::draw() const {
+void Map::draw(bool debug) const {
     for(int i = 0; i < rows; i++) {
         for(int j = 0; j < cols; j++) {
-            tileMap[i][j].draw();
+            tileMap[i][j].draw(debug);
         }
     }
+}
+
+BoundingBox* Map::getCollision(int row, int col) const {
+    if(row >= 0 && col >= 0 && row < rows && col < cols)
+        return tileMap[row][col].getCollision();
+    return nullptr;
+}
+
+Vector3 Map::getPosition(int row, int col) const {
+    if(row >= 0 && col >= 0 && row < rows && col < cols)
+        return tileMap[row][col].getPosition();
+    return {};
+}
+
+bool Map::isWall(int row, int col) const {
+    if(row >= 0 && col >= 0 && row < rows && col < cols)
+        return tileMap[row][col].isWall();
+    return {};
 }
 
 // ############ TILE ############
@@ -64,10 +82,13 @@ Model* Tile::wallModel = nullptr;
 
 Tile::Tile() {}
 
-Tile::Tile(Vector3 position, Model& model, bool isWall, int row, int col)
-: position(position), model(&model), isWall(isWall), row(row), col(col) {}
+Tile::Tile(Vector3 position, Model& model, bool wall, int row, int col)
+: position(position), model(&model), wall(wall), row(row), col(col) {}
 
-void Tile::draw() const { DrawModel(*this->model, this->position, 1.0f, WHITE); }
+void Tile::draw(bool debug) const { 
+    DrawModel(*this->model, this->position, 1.0f, WHITE);
+    if(debug) DrawBoundingBox(boundingBox, GREEN);
+}
 
 void Tile::initializeTiles() {
     if(tileMesh == nullptr) {
@@ -93,30 +114,36 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
     for(int r = 0; r < numRows; r++) {
         tileMap[r] = new Tile[numCols];
         for(int c = 0; c < numCols; c++) {
+
+            Tile* tile = &tileMap[r][c];
             
-            tileMap[r][c].row = r;
-            tileMap[r][c].col = c;
-            if(r > 0) tileMap[r][c].up = &tileMap[r-1][c];
-            if(c > 0) tileMap[r][c].up = &tileMap[r][c-1];
+            tile->row = r;
+            tile->col = c;
+            if(r > 0) tile->up = &tileMap[r-1][c];
+            if(c > 0) tile->up = &tileMap[r][c-1];
             
             switch (charMap[r][c]) {
                 case 'f':
                 case 'c':
                 case 'p':
-                    tileMap[r][c].position = {c*TILE_SIZE, -TILE_SIZE/2.0f, r*TILE_SIZE};
-                    tileMap[r][c].isWall = false;
-                    tileMap[r][c].model = floorModel;
+                    tile->position = {c*TILE_SIZE, -TILE_SIZE/2.0f, r*TILE_SIZE};
+                    tile->wall = false;
+                    tile->model = floorModel;
+                    tile->boundingBox = {};
                     break;
                 case 'w':
-                    tileMap[r][c].position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
-                    tileMap[r][c].isWall = true;
-                    tileMap[r][c].model = wallModel;
+                    tile->position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
+                    tile->wall = true;
+                    tile->model = wallModel;
+                    tile->boundingBox = {{tile->position.x - TILE_SIZE/2.0f, tile->position.y - TILE_SIZE/2.0f, tile->position.z - TILE_SIZE/2.0f},
+                                         {tile->position.x + TILE_SIZE/2.0f, tile->position.y + TILE_SIZE/2.0f, tile->position.z + TILE_SIZE/2.0f}};
                     break;
                 default: 
-                    tileMap[r][c].position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
-                    tileMap[r][c].isWall = true;
-                    tileMap[r][c].model = new Model(LoadModelFromMesh(*tileMesh));
+                    tile->position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
+                    tile->wall = true;
+                    tile->model = new Model(LoadModelFromMesh(*tileMesh));
             }
+
 
         } 
     }
@@ -124,4 +151,6 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
     return tileMap;
 }
 
-
+Vector3 Tile::getPosition() const { return position; }
+BoundingBox* Tile::getCollision() { return &this->boundingBox; }
+bool Tile::isWall() const { return this->wall; }

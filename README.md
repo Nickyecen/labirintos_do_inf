@@ -37,7 +37,7 @@ O intuito desse remake é refazer o código agora com as novas experiências que
 - [ ] Sistema de perguntas e dano
 - [ ] Sistema de música quando vê jogador
 #### Player
-- [ ] Sistema de colisão
+- [x] Sistema de colisão
 - [x] Sistema de movimentação
 - [ ] Sistema de corrida e estamina
 - [ ] Sistema de bombas

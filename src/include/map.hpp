@@ -12,10 +12,11 @@ class Tile {
     private:
         Vector3 position;
         Model* model = nullptr;
+        BoundingBox boundingBox;
 
         int row, col;
 
-        bool isWall;
+        bool wall;
 
         Tile* right = nullptr;
         Tile* up = nullptr;
@@ -38,7 +39,10 @@ class Tile {
 
         static Tile** makeTileMap(int numRows, int numCols, char** charMap);
 
-        void draw() const;
+        void draw(bool debug) const;
+        BoundingBox* getCollision();
+        Vector3 getPosition() const;
+        bool isWall() const;
 
         static void initializeTiles();
 };
@@ -55,8 +59,10 @@ class Map {
     public:
         Map(std::string path);
         void print() const;
-        void draw() const;
-
+        void draw(bool debug) const;
+        BoundingBox* getCollision(int row, int col) const;
+        Vector3 getPosition(int row,  int col) const;
+        bool isWall(int row, int col) const;
 };
 
 #endif
