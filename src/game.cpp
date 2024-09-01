@@ -1,5 +1,6 @@
 #include "include/game.hpp"
 
+#include "include/items.hpp"
 #include "include/player.hpp"
 
 #include <raylib.h>
@@ -15,9 +16,8 @@ char Game::run() {
 
     Player player({8, 8});
 
-    float rot = 0.0f;
-
     Map map("../maps/1.map");
+    Clock bomb(4, 4, 1);
 
     while(!shouldQuit && !WindowShouldClose()) {
 
@@ -29,7 +29,9 @@ char Game::run() {
         BeginDrawing();
         ClearBackground(BLACK);
             BeginMode3D(*player.getCamera());
-                map.draw(true); 
+                map.draw(true);
+                bomb.draw();
+                //Item::drawItems();
             EndMode3D();
             DrawText(ss.str().c_str(), 0, 0, 24, WHITE);
         EndDrawing();

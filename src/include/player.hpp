@@ -16,6 +16,8 @@ class Player {
     private:
         int row, col;
 
+        int bombs, credits, health, life, timeRemaining;
+
         Vector3 position;
         Camera3D* camera;
 
@@ -26,6 +28,12 @@ class Player {
         Player(Vector2 pos);
 
         void update(Map&);
+
+        void incBomb();
+        void incHealth();
+        void incLife();
+        void addCredits(int);
+        void addTime(int);
 
         Camera3D* getCamera() const;
 

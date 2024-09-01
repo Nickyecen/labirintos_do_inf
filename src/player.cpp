@@ -91,3 +91,9 @@ Vector3 Player::getRotation() {
 }
 
 Camera3D* Player::getCamera() const { return this->camera; }
+
+void Player::incBomb()                  { this->bombs++; }
+void Player::incHealth()                { this->health++; }
+void Player::incLife()                  { this->life++; }
+void Player::addCredits(int credits)    { this->credits += credits; }
+void Player::addTime(int time)          { this->timeRemaining += time; }
