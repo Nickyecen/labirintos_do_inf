@@ -2,8 +2,10 @@
 #include "include/map.hpp"
 #include "include/player.hpp"
 #include <algorithm>
+#include <ctime>
 #include <raylib.h>
 #include <vector>
+#include <iostream>
 
 std::vector<Item*> Item::items = {};
 
@@ -13,22 +15,50 @@ Model* Health::healthModel = nullptr;
 Model* Life::lifeModel = nullptr;
 Model* Clock::clockModel = nullptr;
 
-    void Item::draw() const {
+Texture* Clock::diffuse = nullptr;
+
+Item::~Item() {}
+
+void Item::draw() const {
     DrawModelEx(*this->model, this->position, {0.0f, 1.0f, 0.0f}, this->rotation, {this->scale, this->scale, this->scale}, WHITE);
 }
 
-void Item::drawItems() {
-    for(auto& item : items) {
-        item->draw();
+void Item::drawBB() const {
+    DrawBoundingBox(this->collisionBox, RED);
+}
+
+void Item::drawItems(bool debug) {
+    for(const auto& item : items) item->draw();
+
+    if(debug)
+        for(auto& item : items)
+            item->drawBB();
+}
+
+void Item::update(Player& player) {
+    this->rotation += ITEM_SPEED*GetFrameTime();
+    if(player.getRow() == this->row && player.getCol() == this->col) {
+        if(CheckCollisionBoxes(this->collisionBox, player.getCollision()))
+            this->get(player);
     }
 }
 
-void Item::update() {
-    this->rotation = (((int) (1000*GetTime())) % 314) / 100.0f;
+void Item::updateItems(Player& player) {
+    for(auto it = items.begin(); it != items.end();) {
+        if((*it)->collected) {
+            (*it)->~Item();
+            it = items.erase(it);
+        } else {
+            (*it)->update(player);
+            it++;
+        }
+    }
 }
 
 void Item::initializeItem(Model* model, int row, int col) {
     this->model = model;
+    this->row = row;
+    this->col = col;
     this->position = {TILE_SIZE*col, ITEM_SIZE/2.0f, TILE_SIZE*row};
     BoundingBox box = GetModelBoundingBox(*model);
     this->scale = ITEM_SIZE/(box.max.x - box.min.x);
@@ -69,8 +99,11 @@ Credit::Credit(int row, int col, int credits) {
 }
 
 Clock::Clock(int row, int col, int time) {
-    if(clockModel == nullptr)
+    if(clockModel == nullptr) {
         clockModel = new Model(LoadModel("../resources/items/clock.obj"));
+        diffuse = new Texture(LoadTexture("../resources/items/clock_diff.png"));
+        clockModel->materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = *diffuse;
+    }
 
     this->initializeItem(clockModel, row, col);
 
@@ -79,31 +112,26 @@ Clock::Clock(int row, int col, int time) {
 
 void Bomb::get(Player& player) {
     player.incBomb();
-    items.erase(std::remove(items.begin(), items.end(), this), items.end());
-    delete this; 
+    this->collected = true; 
 }
 
 void Health::get(Player& player) {
     player.incHealth();
-    items.erase(std::remove(items.begin(), items.end(), this), items.end());
-    delete this; 
+    this->collected = true;
 }
 
 void Life::get(Player& player) {
     player.incLife();
-    items.erase(std::remove(items.begin(), items.end(), this), items.end());
-    delete this; 
+    this->collected = true;
 }
 
 void Clock::get(Player& player) {
     player.addTime(time);
-    items.erase(std::remove(items.begin(), items.end(), this), items.end());
-    delete this; 
+    this->collected = true;
 }
 
 void Credit::get(Player& player) {
     player.addCredits(credits);
-    items.erase(std::remove(items.begin(), items.end(), this), items.end());
-    delete this; 
+    this->collected = true;
 }
 

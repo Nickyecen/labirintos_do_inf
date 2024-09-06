@@ -16,7 +16,7 @@ class Player {
     private:
         int row, col;
 
-        int bombs, credits, health, life, timeRemaining;
+        int bombs = 0, credits = 0, health = 3, life = 3, timeRemaining = 0;
 
         Vector3 position;
         Camera3D* camera;
@@ -35,7 +35,10 @@ class Player {
         void addCredits(int);
         void addTime(int);
 
+        int getRow() const;
+        int getCol() const;
         Camera3D* getCamera() const;
+        BoundingBox getCollision() const;
 
     private:
         Vector3 getMovement(Map&);

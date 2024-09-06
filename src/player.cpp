@@ -91,6 +91,9 @@ Vector3 Player::getRotation() {
 }
 
 Camera3D* Player::getCamera() const { return this->camera; }
+BoundingBox Player::getCollision() const { return this->collisionBox; }
+int Player::getRow() const { return this->row; }
+int Player::getCol() const { return this->col; }
 
 void Player::incBomb()                  { this->bombs++; }
 void Player::incHealth()                { this->health++; }

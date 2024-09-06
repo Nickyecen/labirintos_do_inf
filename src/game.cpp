@@ -17,7 +17,8 @@ char Game::run() {
     Player player({8, 8});
 
     Map map("../maps/1.map");
-    Clock bomb(4, 4, 1);
+    Health bomb(6, 4);
+    Clock bomb2(5, 4, 1);
 
     while(!shouldQuit && !WindowShouldClose()) {
 
@@ -25,13 +26,13 @@ char Game::run() {
         ss<<"FPS: "<<(int) (1.0f/GetFrameTime());
 
         player.update(map);
+        Item::updateItems(player);
 
         BeginDrawing();
         ClearBackground(BLACK);
             BeginMode3D(*player.getCamera());
                 map.draw(true);
-                bomb.draw();
-                //Item::drawItems();
+                Item::drawItems(true);
             EndMode3D();
             DrawText(ss.str().c_str(), 0, 0, 24, WHITE);
         EndDrawing();

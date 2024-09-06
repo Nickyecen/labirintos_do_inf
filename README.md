@@ -22,11 +22,11 @@ O intuito desse remake é refazer o código agora com as novas experiências que
 #### Itens
 - [ ] Sistema shufflebag para créditos
 - [ ] Distribuição aleatória de itens pelo mapa
-- [ ] Item de vida
-- [ ] Item de bomba
-- [ ] Item de créditos 
-- [ ] Item de saúde
-- [ ] Animação para o item girando
+- [x] Item de vida
+- [x] Item de bomba
+- [x] Item de créditos 
+- [x] Item de saúde
+- [x] Animação para o item girando
 #### Estátuas
 - [ ] Pelo menos três estátuas aleatórias
 - [ ] Sistema de estátua de vidas anteriores

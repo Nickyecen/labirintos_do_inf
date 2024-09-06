@@ -8,6 +8,7 @@
 #include "player.hpp"
 
 #define ITEM_SIZE 0.6f
+#define ITEM_SPEED 30
 
 class Item {
     // VARIABLES
@@ -15,6 +16,9 @@ class Item {
         static std::vector<Item*> items;
     protected: 
         Vector3 position;
+        int row;
+        int col;
+        bool collected = false;
         Model* model = nullptr;
         BoundingBox collisionBox;
         float scale = 1.0f;
@@ -23,10 +27,15 @@ class Item {
 
     // METHODS
     public:
-        static void drawItems();
+        static void drawItems(bool debug);
+        static void updateItems(Player& player);
+
+        ~Item();
+
         virtual void get(Player& player) = 0;
         void draw() const;
-        void update();
+        void drawBB() const;
+        void update(Player& player);
     protected:
         void initializeItem(Model* model, int row, int col);
 };
@@ -38,7 +47,7 @@ class Bomb : public Item {
     // METHODS
     public:
         Bomb(int row, int col);
-        void get(Player& player);
+        void get(Player& player) override;
 };
 
 class Credit : public Item {
@@ -49,7 +58,7 @@ class Credit : public Item {
     // METHODS
     public:
         Credit(int row, int col, int credits);
-        void get(Player& player);
+        void get(Player& player) override;
 };
 
 class Health : public Item {
@@ -59,7 +68,7 @@ class Health : public Item {
     // METHODS
     public:
         Health(int row, int col);
-        void get(Player& player);
+        void get(Player& player) override;
 };
 
 class Life : public Item {
@@ -69,7 +78,7 @@ class Life : public Item {
     // METHODS
     public:
         Life(int row, int col);
-        void get(Player& player);
+        void get(Player& player) override;
 };
 
 class Clock : public Item {
@@ -77,10 +86,11 @@ class Clock : public Item {
     private:
         int time;
         static Model* clockModel;
+        static Texture* diffuse;
     // METHODS
     public:
         Clock(int row, int col, int time);
-        void get(Player& player);
+        void get(Player& player) override;
 };
 
 #endif
