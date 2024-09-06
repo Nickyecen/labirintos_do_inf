@@ -2,6 +2,7 @@
 #include <fstream>
 #include <raylib.h>
 #include <string>
+#include <vector>
 
 // ############ MAP ############
 Map::Map(std::string path) {
@@ -142,8 +143,9 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
                     tile->position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
                     tile->wall = true;
                     tile->model = new Model(LoadModelFromMesh(*tileMesh));
+                    tile->boundingBox = {{tile->position.x - TILE_SIZE/2.0f, tile->position.y - TILE_SIZE/2.0f, tile->position.z - TILE_SIZE/2.0f},
+                                         {tile->position.x + TILE_SIZE/2.0f, tile->position.y + TILE_SIZE/2.0f, tile->position.z + TILE_SIZE/2.0f}};
             }
-
 
         } 
     }
@@ -151,6 +153,22 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
     return tileMap;
 }
 
+std::vector<Tile*> Map::getFloors() const {
+    std::vector<Tile*> floors = {};
+    
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            Tile* curTile = &tileMap[i][j];
+
+            if(!curTile->isWall()) floors.push_back(curTile);
+        }
+    }
+
+    return floors;
+}
+
 Vector3 Tile::getPosition() const { return position; }
 BoundingBox* Tile::getCollision() { return &this->boundingBox; }
 bool Tile::isWall() const { return this->wall; }
+int Tile::getRow() const { return this->row; }
+int Tile::getCol() const { return this->col; }

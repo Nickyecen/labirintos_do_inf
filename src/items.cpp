@@ -19,6 +19,39 @@ Texture* Clock::diffuse = nullptr;
 
 Item::~Item() {}
 
+void Item::genRandom(Map &map, int numCredits, int numLives, int numHealth, int numBombs, int numTime) {
+    std::vector<Tile*> floors = map.getFloors();
+    int* order = LoadRandomSequence((int) floors.size(), 0, (int) floors.size());
+
+    int i = 0;
+    Tile* it = 0;
+    while(numCredits > 0) {
+        int amount = GetRandomValue(1, std::max(numCredits, 5));
+        numCredits -= amount;
+
+        it = floors[order[i++]];
+        new Credit(it->getRow(), it->getCol(), amount);
+    } while(numTime > 0) {
+        int amount = 5*GetRandomValue(1, std::max(numCredits, 6));
+        numTime -= amount;
+
+        it = floors[order[i++]];
+        new Clock(it->getRow(), it->getCol(), amount);
+    } while(numBombs > 0) {
+        numBombs--;
+        it = floors[order[i++]];
+        new Bomb(it->getRow(), it->getCol());
+    } while(numHealth > 0) {
+        numHealth--;
+        it = floors[order[i++]];
+        new Health(it->getRow(), it->getCol());
+    } while(numLives > 0) {
+        numLives--;
+        it = floors[order[i++]];
+        new Life(it->getRow(), it->getCol());
+    }
+}
+
 void Item::draw() const {
     DrawModelEx(*this->model, this->position, {0.0f, 1.0f, 0.0f}, this->rotation, {this->scale, this->scale, this->scale}, WHITE);
 }

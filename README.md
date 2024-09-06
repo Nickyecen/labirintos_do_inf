@@ -10,6 +10,7 @@ O intuito desse remake é refazer o código agora com as novas experiências que
 - [ ] Música de fundo no menu
 - [ ] Imagem de fundo no menu
 - [ ] Caixa de confirmação para decisões destruidoras
+- [ ] Seletor de dificuldade
 ### Saves
 - [ ] Sistema de jogo
 - [ ] Sistema de salvamento de jogo
@@ -20,8 +21,8 @@ O intuito desse remake é refazer o código agora com as novas experiências que
 - [ ] Menu de pausa
 - [ ] GUI
 #### Itens
-- [ ] Sistema shufflebag para créditos
-- [ ] Distribuição aleatória de itens pelo mapa
+- [x] Sistema shufflebag para créditos
+- [x] Distribuição aleatória de itens pelo mapa
 - [x] Item de vida
 - [x] Item de bomba
 - [x] Item de créditos 

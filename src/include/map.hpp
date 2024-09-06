@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <raylib.h>
+#include <vector>
 
 #define TILE_SIZE 2.0f
 
@@ -42,6 +43,8 @@ class Tile {
         void draw(bool debug) const;
         BoundingBox* getCollision();
         Vector3 getPosition() const;
+        int getRow() const;
+        int getCol() const;
         bool isWall() const;
 
         static void initializeTiles();
@@ -63,6 +66,8 @@ class Map {
         BoundingBox* getCollision(int row, int col) const;
         Vector3 getPosition(int row,  int col) const;
         bool isWall(int row, int col) const;
+
+        std::vector<Tile*> getFloors() const;
 };
 
 #endif

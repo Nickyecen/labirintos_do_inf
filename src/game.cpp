@@ -17,8 +17,8 @@ char Game::run() {
     Player player({8, 8});
 
     Map map("../maps/1.map");
-    Health bomb(6, 4);
-    Clock bomb2(5, 4, 1);
+
+    Item::genRandom(map, 5, 1, 3, 2, 60); 
 
     while(!shouldQuit && !WindowShouldClose()) {
 

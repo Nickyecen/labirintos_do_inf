@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <vector>
+#include <algorithm>
 
 #include "map.hpp"
 #include "player.hpp"
@@ -29,10 +30,12 @@ class Item {
     public:
         static void drawItems(bool debug);
         static void updateItems(Player& player);
+        static void genRandom(Map& map, int numCredits, int numLives, int numHealth, int numBombs, int numTime);
 
         ~Item();
 
         virtual void get(Player& player) = 0;
+
         void draw() const;
         void drawBB() const;
         void update(Player& player);
