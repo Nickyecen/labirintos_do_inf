@@ -2,7 +2,7 @@
 #include <raylib.h>
 
 #define RAYGUI_IMPLEMENTATION
-#include "include/raygui.h"
+#include <raygui.h>
 
 char Menu::run() {
    
