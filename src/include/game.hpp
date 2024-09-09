@@ -3,6 +3,7 @@
 
 #include "map.hpp"
 #include "items.hpp"
+#include "teachers.hpp"
 
 class Game {
     public:

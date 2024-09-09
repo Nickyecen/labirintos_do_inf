@@ -2,6 +2,7 @@
 
 #include "include/items.hpp"
 #include "include/player.hpp"
+#include "include/teachers.hpp"
 
 #include <raylib.h>
 #include <rlgl.h>
@@ -15,6 +16,7 @@ char Game::run() {
     DisableCursor();
 
     Player player({8, 8});
+    Teacher* teacher = Teacher::makeTeachD(4, 4);
 
     Map map("../maps/1.map");
 
@@ -26,6 +28,7 @@ char Game::run() {
         ss<<"FPS: "<<(int) (1.0f/GetFrameTime());
 
         player.update(map);
+        teacher->update(player);
         Item::updateItems(player);
 
         BeginDrawing();
@@ -33,6 +36,7 @@ char Game::run() {
             BeginMode3D(*player.getCamera());
                 map.draw(true);
                 Item::drawItems(true);
+                teacher->draw(true);
             EndMode3D();
             DrawText(ss.str().c_str(), 0, 0, 24, WHITE);
         EndDrawing();

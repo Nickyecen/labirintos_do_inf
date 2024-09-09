@@ -1,4 +1,5 @@
 #include "include/player.hpp"
+#include "include/map.hpp"
 #include <cmath>
 #include <raylib.h>
 #include <raymath.h>
@@ -7,6 +8,8 @@ Player::Player(Vector2 pos) {
     this->position = {pos.x, PLAYER_HEIGHT - 0.1f, pos.y};
     this->collisionBox = {{position.x - COLLISION_SIZE, 0.0f, position.z - COLLISION_SIZE},
                           {position.x + COLLISION_SIZE, PLAYER_HEIGHT, position.z + COLLISION_SIZE}};
+    this->viewBox = {{position.x - TILE_SIZE/2.0f + 0.05f, 0.0f, position.z - TILE_SIZE/2.0f + 0.05f},
+                     {position.x + TILE_SIZE/2.0f - 0.05f, PLAYER_HEIGHT, position.z + TILE_SIZE/2.0f - 0.5f}};
 
     row = std::round(position.z / TILE_SIZE);
     col = std::round(position.x / TILE_SIZE);
@@ -31,6 +34,8 @@ void Player::update(Map& tileMap) {
     this->position = camera->position;
     this->collisionBox = {{position.x - COLLISION_SIZE, 0.0f, position.z - COLLISION_SIZE},
                           {position.x + COLLISION_SIZE, PLAYER_HEIGHT, position.z + COLLISION_SIZE}};
+    this->viewBox = {{position.x - TILE_SIZE/2.0f, 0.0f, position.z - TILE_SIZE/2.0f},
+                     {position.x + TILE_SIZE/2.0f, PLAYER_HEIGHT, position.z + TILE_SIZE/2.0f}};
 
     row = std::round(position.z / TILE_SIZE);
     col = std::round(position.x / TILE_SIZE);
@@ -92,6 +97,7 @@ Vector3 Player::getRotation() {
 
 Camera3D* Player::getCamera() const { return this->camera; }
 BoundingBox Player::getCollision() const { return this->collisionBox; }
+BoundingBox Player::getViewBox() const { return this->viewBox; }
 int Player::getRow() const { return this->row; }
 int Player::getCol() const { return this->col; }
 

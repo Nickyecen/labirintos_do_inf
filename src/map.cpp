@@ -125,13 +125,22 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
             
             switch (charMap[r][c]) {
                 case 'f':
-                case 'c':
-                case 'p':
+                case 'p': {
+                    char rightChar = charMap[r][c+1], upChar = charMap[r-1][c], leftChar = charMap[r][c-1], downChar = charMap[r+1][c]; 
+                    bool rightWall = rightChar != 'f' && rightChar != 'p';
+                    bool upWall = upChar != 'f' && upChar != 'p';
+                    bool leftWall = leftChar != 'f' && leftChar != 'p';
+                    bool downWall = downChar != 'f' && downChar != 'p';
+
+                    bool isCorner = !rightWall&&upWall&&!leftWall&&downWall
+                                 || rightWall&&!upWall&&leftWall&&!downWall;
+
                     tile->position = {c*TILE_SIZE, -TILE_SIZE/2.0f, r*TILE_SIZE};
                     tile->wall = false;
                     tile->model = floorModel;
                     tile->boundingBox = {};
                     break;
+                }
                 case 'w':
                     tile->position = {c*TILE_SIZE, TILE_SIZE/2.0f, r*TILE_SIZE};
                     tile->wall = true;

@@ -22,6 +22,7 @@ class Player {
         Camera3D* camera;
 
         BoundingBox collisionBox;
+        BoundingBox viewBox;
    
     // METHODS
     public:
@@ -39,6 +40,7 @@ class Player {
         int getCol() const;
         Camera3D* getCamera() const;
         BoundingBox getCollision() const;
+        BoundingBox getViewBox() const;
 
     private:
         Vector3 getMovement(Map&);
