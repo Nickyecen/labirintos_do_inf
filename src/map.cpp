@@ -83,8 +83,8 @@ Model* Tile::wallModel = nullptr;
 
 Tile::Tile() {}
 
-Tile::Tile(Vector3 position, Model& model, bool wall, int row, int col)
-: position(position), model(&model), wall(wall), row(row), col(col) {}
+Tile::Tile(Vector3 position, Model& model, bool wall, bool corner, int row, int col)
+: position(position), model(&model), wall(wall), corner(corner), row(row), col(col) {}
 
 void Tile::draw(bool debug) const { 
     DrawModel(*this->model, this->position, 1.0f, WHITE);
@@ -121,7 +121,7 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
             tile->row = r;
             tile->col = c;
             if(r > 0) tile->up = &tileMap[r-1][c];
-            if(c > 0) tile->up = &tileMap[r][c-1];
+            if(c > 0) tile->left = &tileMap[r][c-1];
             
             switch (charMap[r][c]) {
                 case 'f':
@@ -134,9 +134,11 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
 
                     bool isCorner = !rightWall&&upWall&&!leftWall&&downWall
                                  || rightWall&&!upWall&&leftWall&&!downWall;
+                    isCorner = !isCorner;
 
                     tile->position = {c*TILE_SIZE, -TILE_SIZE/2.0f, r*TILE_SIZE};
                     tile->wall = false;
+                    tile->corner = isCorner;
                     tile->model = floorModel;
                     tile->boundingBox = {};
                     break;
@@ -159,8 +161,64 @@ Tile** Tile::makeTileMap(int numRows, int numCols, char** charMap) {
         } 
     }
 
+    for(int r = 0; r < numRows; r++) {
+        for(int c = 0; c < numCols; c++) {
+            Tile* tile = &tileMap[r][c];
+            if(r < numRows) tile->down = &tileMap[r+1][c];
+            if(c < numCols) tile->right = &tileMap[r][c+1];
+        }
+    }
+
     return tileMap;
 }
+
+std::vector<Corner*> Corner::makeCornerVector(int numRows, int numCols, Tile **tileMap) {
+ 
+    std::vector<Corner*> cornerVector = {};
+    std::queue<Corner*> cornerQueue = {};
+
+    bool foundFirstCorner = false;
+    for(int r = 0; r < numRows && !foundFirstCorner; r++) {
+        for(int c = 0 ; c < numCols && !foundFirstCorner; c++) {
+            if(tileMap[r][c].isCorner()) {
+                cornerQueue.push(new Corner(&tileMap[r][c]));
+                cornerVector.push_back(cornerQueue.front());
+                foundFirstCorner = true;                
+            }
+        }
+    }
+
+    while(!cornerQueue.empty()) {
+        Corner* current = cornerQueue.front();
+        cornerQueue.pop();
+
+        Tile *right, *down;
+        for(right = current->tile->getRight(); right != nullptr && !right->isCorner() && !right->isWall(); right = right->getRight());
+        for(down = current->tile->getDown(); down != nullptr && !down->isCorner() && !down->isWall(); down = down->getDown());
+
+        if(right != nullptr && !right->isWall()) { 
+            Corner* newCorner = new Corner(right);
+            cornerQueue.push(newCorner);
+            cornerVector.push_back(newCorner);
+
+            current->right = newCorner;
+            newCorner->left = current;
+        } if(down != nullptr && !down->isWall()) {
+            Corner* newCorner = new Corner(down);
+            cornerQueue.push(newCorner);
+            cornerVector.push_back(newCorner);
+
+            current->down = newCorner;
+            newCorner->up = current;
+        }
+
+    }
+
+    return cornerVector;
+}
+
+Corner::Corner(Tile* tile)
+: tile(tile) {}
 
 std::vector<Tile*> Map::getFloors() const {
     std::vector<Tile*> floors = {};
@@ -176,8 +234,55 @@ std::vector<Tile*> Map::getFloors() const {
     return floors;
 }
 
+bool Map::checkVision(int rowA, int colA, int rowB, int colB) {
+    if(rowA == rowB) {
+
+        int smaller, bigger; 
+
+        if(colA > colB) {
+            smaller = colB;
+            bigger = colA;
+        } else if(colA < colB) { 
+            smaller = colA;
+            bigger = colB;
+        } else {
+            return true;
+        }
+
+        for(int i = smaller; i < bigger; i++)
+            if(tileMap[rowA][i].isWall()) return false;
+
+        return true;
+
+    } else if(colA == colB) {
+
+        int smaller, bigger; 
+
+        if(rowA > rowB) {
+            smaller = rowB;
+            bigger = rowA;
+        } else if(rowA < rowB) { 
+            smaller = rowA;
+            bigger = rowB;
+        }
+
+        for(int i = smaller; i < bigger; i++)
+            if(tileMap[i][colA].isWall()) return false;
+
+        return true;
+
+    }
+
+    return false;
+}
+
 Vector3 Tile::getPosition() const { return position; }
 BoundingBox* Tile::getCollision() { return &this->boundingBox; }
 bool Tile::isWall() const { return this->wall; }
+bool Tile::isCorner() const { return this->corner; }
 int Tile::getRow() const { return this->row; }
 int Tile::getCol() const { return this->col; }
+Tile* Tile::getRight() const { return this->right; }
+Tile* Tile::getUp() const { return this->up; }
+Tile* Tile::getLeft() const { return this->left; }
+Tile* Tile::getDown() const { return this->down; }

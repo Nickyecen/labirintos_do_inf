@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "player.hpp"
+#include "map.hpp"
 
 class Teacher {
     // VARIABLES
@@ -35,18 +36,20 @@ class Teacher {
         BoundingBox* collisionBox = nullptr;
         Model* model;
 
+        Map* map = nullptr;
+
     // METHODS
     public:
-        Teacher(int row, int col, Model& model);
+        Teacher(int row, int col, Model& model, Map& map);
 
         void draw(bool debug) const;
         void update(Player& player);
 
-        static Teacher* makeTeachD(int row, int col);
-        static Teacher* makeTeachS(int row, int col);
-        static Teacher* makeTeachR(int row, int col);
-        static Teacher* makeTeachL(int row, int col);
-        static Teacher* makeTeachJ(int row, int col);
+        static Teacher* makeTeachD(int row, int col, Map& map);
+        static Teacher* makeTeachS(int row, int col, Map& map);
+        static Teacher* makeTeachR(int row, int col, Map& map);
+        static Teacher* makeTeachL(int row, int col, Map& map);
+        static Teacher* makeTeachJ(int row, int col, Map& map);
 };
 
 #endif

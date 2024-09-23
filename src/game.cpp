@@ -15,10 +15,10 @@ char Game::run() {
 
     DisableCursor();
 
-    Player player({8, 8});
-    Teacher* teacher = Teacher::makeTeachD(4, 4);
-
     Map map("../maps/1.map");
+
+    Player player({8, 8});
+    Teacher* teacher = Teacher::makeTeachD(4, 4, map);
 
     Item::genRandom(map, 5, 1, 3, 2, 60); 
 

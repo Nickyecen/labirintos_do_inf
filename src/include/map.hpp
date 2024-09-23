@@ -5,6 +5,7 @@
 #include <iostream>
 #include <raylib.h>
 #include <vector>
+#include <queue>
 
 #define TILE_SIZE 2.0f
 
@@ -18,6 +19,7 @@ class Tile {
         int row, col;
 
         bool wall;
+        bool corner;
 
         Tile* right = nullptr;
         Tile* up = nullptr;
@@ -36,7 +38,7 @@ class Tile {
     private:
         Tile();
     public:
-        Tile(Vector3 position, Model& model, bool isWall, int row, int col);
+        Tile(Vector3 position, Model& model, bool isWall, bool isCorner, int row, int col);
 
         static Tile** makeTileMap(int numRows, int numCols, char** charMap);
 
@@ -45,9 +47,29 @@ class Tile {
         Vector3 getPosition() const;
         int getRow() const;
         int getCol() const;
+        Tile* getRight() const;
+        Tile* getUp() const;
+        Tile* getLeft() const;
+        Tile* getDown() const;
         bool isWall() const;
+        bool isCorner() const;
 
         static void initializeTiles();
+};
+
+class Corner {
+    private:
+        Tile* tile = nullptr;
+
+        Corner* right = nullptr;
+        Corner* up = nullptr;
+        Corner* left = nullptr;
+        Corner* down = nullptr;
+
+    public:
+        Corner(Tile* tile);
+
+        static std::vector<Corner*> makeCornerVector(int numRows, int numCols, Tile** tileMap);
 };
 
 class Map {
@@ -68,6 +90,8 @@ class Map {
         bool isWall(int row, int col) const;
 
         std::vector<Tile*> getFloors() const;
+
+        bool checkVision(int rowA, int colA, int rowB, int colB);
 };
 
 #endif
